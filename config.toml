@@ -15,7 +15,7 @@
 baseURL = "https://mo0om.com/"
 languageCode = "en-us"
 defaultContentLanguage = "en-us"
-title = "mo0oom - personal blog"
+title = "mo0oom - Han's blog"
 theme = "hugo-tranquilpeak-theme"
 disqusShortname = "hugo-tranquilpeak-theme"
 googleAnalytics = "UA-115519367-1"
@@ -32,14 +32,14 @@ canonifyurls = true
 
 [author]
   name = "Han"
-  bio = "힘 찍은 법사, 라떄, 40+, 아재. 꼰머는 아니길."
+  bio = "Database Engineeer, Developer"
   job = "그냥 이것저것 합니다"
   location = "KR"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
   #gravatarEmail = "thibaud.lepretre@gmail.com"
   # Your profile picture
   # Overwritten by your gravatar image if `author.gravatarEmail` is filled
-  picture = "https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png"
+  picture = "avatar.png"
   # Your Twitter username without the @. E.g : thibaudlepretreh
   # twitter = "thibaudlepretre"
   # Your google plus profile id. E.g : +ThibaudLepretre or 114625208755123718311
@@ -127,7 +127,7 @@ canonifyurls = true
   #    large sidebar is swiped on all lower screens
   # 5: Display header bar on all screens and large sidebar is swiped on large screen
   # 6: Display header bar on all screens and medium sidebar is swiped
-  sidebarBehavior = 1
+  sidebarBehavior = 2
 
   # Your blog cover picture. I STRONGLY recommend you to use a CDN to speed up loading of pages.
   # There is many free CDN like Cloudinary or you can also use indirectly
@@ -190,10 +190,6 @@ canonifyurls = true
     icon = "fa-twitter"
     url = "https://twitter.com/intent/tweet?text=%s"
 
-  [[params.sharingOptions]]
-    name = "Google+"
-    icon = "fa-google-plus"
-    url = "https://plus.google.com/share?url=%s"
 
   [params.header.rightLink]
     class = ""
