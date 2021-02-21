@@ -1,18 +1,273 @@
-<!doctype html><html lang=en-us><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=x-ua-compatible content="IE=edge"><meta name=generator content="Hugo 0.80.0 with theme Tranquilpeak 0.4.8-BETA"><meta name=author content="Han"><meta name=keywords content><meta name=description content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.80.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="Han">
+<meta name="keywords" content="">
+<meta name="description" content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
 Hook Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록 여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.
-이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다."><meta property="og:description" content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
+이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.">
+
+
+<meta property="og:description" content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
 Hook Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록 여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.
-이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다."><meta property="og:type" content="article"><meta property="og:title" content="PostgreSQL Hooks"><meta name=twitter:title content="PostgreSQL Hooks"><meta property="og:url" content="https://mo0om.com/2021/postgresql-hooks/"><meta property="twitter:url" content="https://mo0om.com/2021/postgresql-hooks/"><meta property="og:site_name" content="mo0oom - personal blog"><meta property="og:description" content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
+이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL Hooks">
+<meta name="twitter:title" content="PostgreSQL Hooks">
+<meta property="og:url" content="https://mo0om.com/2021/postgresql-hooks/">
+<meta property="twitter:url" content="https://mo0om.com/2021/postgresql-hooks/">
+<meta property="og:site_name" content="mo0oom - personal blog">
+<meta property="og:description" content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
 Hook Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록 여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.
-이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다."><meta name=twitter:description content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
+이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.">
+<meta name="twitter:description" content="들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
 Hook Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록 여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.
-이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다."><meta property="og:locale" content="en-us"><meta property="article:published_time" content="2021-02-19T01:42:46"><meta property="article:modified_time" content="2021-02-19T01:42:46"><meta property="article:section" content="database"><meta property="article:tag" content="postgresql"><meta property="article:tag" content="hook"><meta name=twitter:card content="summary"><meta property="og:image" content="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png"><meta property="twitter:image" content="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png"><title>PostgreSQL Hooks</title><link rel=icon href=https://mo0om.com/favicon.png><link rel=canonical href=https://mo0om.com/2021/postgresql-hooks/><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin=anonymous><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin=anonymous><link rel=stylesheet href=https://mo0om.com/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css><script type=application/javascript>var doNotTrack=false;if(!doNotTrack){(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');ga('create','UA-115519367-1','auto');ga('send','pageview');}</script></head><body><div id=blog><header id=header data-behavior=4><i id=btn-open-sidebar class="fa fa-lg fa-bars"></i><div class=header-title><a class=header-title-link href=https://mo0om.com/>mo0oom - personal blog</a></div><a class=header-right-picture href=https://mo0om.com/#about><img class=header-picture src=https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png alt="Author's picture"></a></header><nav id=sidebar data-behavior=4><div class=sidebar-container><div class=sidebar-profile><a href=https://mo0om.com/#about><img class=sidebar-profile-picture src=https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png alt="Author's picture"></a><h4 class=sidebar-profile-name>Han</h4><h5 class=sidebar-profile-bio>힘 찍은 법사, 라떄, 40+, 아재. 꼰머는 아니길.</h5></div><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=https://mo0om.com/><i class="sidebar-button-icon fa fa-lg fa-home"></i><span class=sidebar-button-desc>Home</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://mo0om.com/categories><i class="sidebar-button-icon fa fa-lg fa-bookmark"></i><span class=sidebar-button-desc>Categories</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://mo0om.com/tags><i class="sidebar-button-icon fa fa-lg fa-tags"></i><span class=sidebar-button-desc>Tags</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://mo0om.com/archives><i class="sidebar-button-icon fa fa-lg fa-archive"></i><span class=sidebar-button-desc>Archives</span></a></li><li class=sidebar-button><a class=sidebar-button-link href=https://mo0om.com/#about><i class="sidebar-button-icon fa fa-lg fa-question"></i><span class=sidebar-button-desc>About</span></a></li></ul><ul class=sidebar-buttons><li class=sidebar-button><a class=sidebar-button-link href=https://github.com/ckh0618 target=_blank rel=noopener><i class="sidebar-button-icon fa fa-lg fa-github"></i><span class=sidebar-button-desc>GitHub</span></a></li></ul><ul class=sidebar-buttons></ul></div></nav><div id=main data-behavior=4 class=hasCoverMetaIn><article class=post itemscope itemtype=http://schema.org/BlogPosting><div class="post-header main-content-wrap text-left"><h1 class=post-title itemprop=headline>PostgreSQL Hooks</h1><div class="postShorten-meta post-meta"><time itemprop=datePublished datetime=2021-02-19T01:42:46+09:00>February 19, 2021</time>
-<span>in</span>
-<a class=category-link href=https://mo0om.com/categories/database>database</a></div></div><div class="post-content markdown" itemprop=articleBody><div class=main-content-wrap><h1 id=들어가며>들어가며</h1><p>PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.</p><h1 id=hook>Hook</h1><p>Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록
-여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.</p><p>이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.
-버젼이 올라갈 때마다 훅이 추가되고 있는데, <a href=https://github.com/AmatanHead/psql-hooks>https://github.com/AmatanHead/psql-hooks</a> 여기에 비공식적이기는 하지만,
-Hook 들이 정리되고 있습니다.</p><p>contribs 코드를 보면 많은 코드가 hook 을 이용하여 구현한걸 볼 수 있습니다.</p><h1 id=동작방식>동작방식</h1><p>Hook 을 사용하는 가장 간단한 예제는 contribs 에 있는 auth_delay 입니다. 80여줄도 안되는 짧은 코드로
-사용자의 인증이 실패했을때 sleep 을 줘서 무작위대입 공격을 막기 위한 기능을 구현했습니다.</p><p>몇줄 안되니까 전체를 보면</p><pre><code>#include &quot;postgres.h&quot;
+이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-02-19T01:42:46">
+  
+  
+    <meta property="article:modified_time" content="2021-02-19T01:42:46">
+  
+  
+  
+    
+      <meta property="article:section" content="database">
+    
+  
+  
+    
+      <meta property="article:tag" content="postgresql">
+    
+      <meta property="article:tag" content="hook">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png">
+  <meta property="twitter:image" content="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png">
+
+
+    <title>PostgreSQL Hooks</title>
+
+    <link rel="icon" href="https://mo0om.com/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://mo0om.com/2021/postgresql-hooks/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://mo0om.com/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-115519367-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="4">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://mo0om.com/">mo0oom - personal blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://mo0om.com/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="4">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://mo0om.com/#about">
+          <img class="sidebar-profile-picture" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Han</h4>
+        
+          <h5 class="sidebar-profile-bio">힘 찍은 법사, 라떄, 40+, 아재. 꼰머는 아니길.</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ckh0618" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="4"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      PostgreSQL Hooks
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-02-19T01:42:46&#43;09:00">
+        
+  February 19, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://mo0om.com/categories/database">database</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="들어가며">들어가며</h1>
+<p>PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.</p>
+<h1 id="hook">Hook</h1>
+<p>Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록
+여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.</p>
+<p>이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.
+버젼이 올라갈 때마다 훅이 추가되고 있는데, <a href="https://github.com/AmatanHead/psql-hooks">https://github.com/AmatanHead/psql-hooks</a> 여기에 비공식적이기는 하지만,
+Hook 들이 정리되고 있습니다.</p>
+<p>contribs 코드를 보면 많은 코드가 hook 을 이용하여 구현한걸 볼 수 있습니다.</p>
+<h1 id="동작방식">동작방식</h1>
+<p>Hook 을 사용하는 가장 간단한 예제는 contribs 에 있는 auth_delay 입니다. 80여줄도 안되는 짧은 코드로
+사용자의 인증이 실패했을때 sleep 을 줘서 무작위대입 공격을 막기 위한 기능을 구현했습니다.</p>
+<p>몇줄 안되니까 전체를 보면</p>
+<pre><code>#include &quot;postgres.h&quot;
 
 #include &lt;limits.h&gt;
 
@@ -74,17 +329,340 @@ _PG_init(void)
 	original_client_auth_hook = ClientAuthentication_hook;
 	ClientAuthentication_hook = auth_delay_checks;
 }
-</code></pre><p>_PG_init() 은 모듈이 로딩될떄 호출되는 함수라는 정도만 이해하면, 그리 이해하는데 어려운 코드는 아닐겁니다.</p><p>PostgreSQL 은 각각의 주요 모듈의 헤더파일마다 _hook_type 의 접미사를 가진 Hook 을 정의해놨습니다. 여기서 예를 든
-ClientClientAuthentication_hook_type 과 변수는 auth.h / auth.c 파일에 다음과 같이 정의되어있습니다.</p><pre><code>typedef void (*ClientAuthentication_hook_type) (Port *, int);
+</code></pre><p>_PG_init() 은 모듈이 로딩될떄 호출되는 함수라는 정도만 이해하면, 그리 이해하는데 어려운 코드는 아닐겁니다.</p>
+<p>PostgreSQL 은 각각의 주요 모듈의 헤더파일마다 _hook_type 의 접미사를 가진 Hook 을 정의해놨습니다. 여기서 예를 든
+ClientClientAuthentication_hook_type 과 변수는 auth.h / auth.c 파일에 다음과 같이 정의되어있습니다.</p>
+<pre><code>typedef void (*ClientAuthentication_hook_type) (Port *, int);
 extern PGDLLIMPORT ClientAuthentication_hook_type ClientAuthentication_hook;
 </code></pre><p>이런식으로 PostgreSQL 개발자들은 Hook 을 모두 별도의 타입으로 정의해놨고, 전역변수로 Hook 을 노출 해놨습니다.
 ClientAuthentication_hook 에 사용자가 만든 로직을 넣어주면 사용자가 정의한 함수를 수행하고, 원래 PostgreSQL 에서 의도된
-동작을 수행하게 됩니다.</p><p>위 코드에서 하나 더 주의 깊게 살펴봐야하는 부분은, 기존에 설정된 Hook을 복사하는 과정입니다. 똑같은 Hook 을 사용하는 여러개의 모듈들이 존재할 수 있기 때문에
-혹시라도 설치되어있을 Hook 을 복사해놓고, 이를 나중에 호출해 주는 것입니다.</p><p>제대로 코딩을 하려면 사실 Hook 에 정의된 인자 및 구조체를 따라가봐야하는데, 이는 제공하는 각각의 훅마다 다르므로 정의를 보고 인자들을 연구해봐야합니다.
-제가 주로 사용하는 방식은 gdb 이나 clion 같은 툴을 사용하여 debugging 모드로 따라가면서 인자를 분석합니다.</p><h1 id=사용예>사용예</h1><p>Hook 은 엄청나게 많은 contribs 코드에서 사용되고 있습니다.</p><ul><li>auth_deply</li><li>pg_stat_statement</li><li>auth_explain</li></ul><p>그외 PostgreSQL 을 확장한 Citus의 경우도 이 Hook 을 적극적으로 사용하여 Multi-Node Cluster 방식의 OLAP 엔진을 구현했습니다.</p><p>다음은 이 Hook 을 이용하여 간단하게 만들어본 pg_log 에 로그를 필터링하는 모듈입니다.
-<a href=https://github.com/ckh0618/pg_logfilter>https://github.com/ckh0618/pg_logfilter</a> 자세한 사용법은 README 를 참고하시면 됩니다.</p><p>그럼 Happy Coding !</p></div></div><div id=post-footer class="post-footer main-content-wrap"><div class=post-footer-tags><span class="text-color-light text-small">TAGGED IN</span><br><a class="tag tag--primary tag--small" href=https://mo0om.com/tags/postgresql/>postgresql</a>
-<a class="tag tag--primary tag--small" href=https://mo0om.com/tags/hook/>hook</a></div><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--disabled"><i class="fa fa-angle-left"></i><span class="hide-xs hide-sm text-small icon-ml">NEXT</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=https://mo0om.com/2018/memorycontext-concepts-in-postgresql/ data-tooltip="MemoryContext concepts in PostgreSQL"><span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
-<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class="post-action hide-xs"><a class="post-action-btn btn btn--default" target=new href="https://www.facebook.com/sharer/sharer.php?u=https://mo0om.com/2021/postgresql-hooks/"><i class="fa fa-facebook-official"></i></a></li><li class="post-action hide-xs"><a class="post-action-btn btn btn--default" target=new href="https://twitter.com/intent/tweet?text=https://mo0om.com/2021/postgresql-hooks/"><i class="fa fa-twitter"></i></a></li><li class="post-action hide-xs"><a class="post-action-btn btn btn--default" target=new href="https://plus.google.com/share?url=https://mo0om.com/2021/postgresql-hooks/"><i class="fa fa-google-plus"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#disqus_thread><i class="fa fa-comment-o"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div><div id=disqus_thread><noscript>Please enable JavaScript to view the <a href=//disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript></div></div></article><footer id=footer class=main-content-wrap><span class=copyrights>&copy; 2021 Han. All Rights Reserved</span></footer></div><div id=bottom-bar class=post-bottom-bar data-behavior=4><div class=post-actions-wrap><nav><ul class="post-actions post-action-nav"><li class=post-action><a class="post-action-btn btn btn--disabled"><i class="fa fa-angle-left"></i><span class="hide-xs hide-sm text-small icon-ml">NEXT</span></a></li><li class=post-action><a class="post-action-btn btn btn--default tooltip--top" href=https://mo0om.com/2018/memorycontext-concepts-in-postgresql/ data-tooltip="MemoryContext concepts in PostgreSQL"><span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
-<i class="fa fa-angle-right"></i></a></li></ul></nav><ul class="post-actions post-action-share"><li class="post-action hide-lg hide-md hide-sm"><a class="post-action-btn btn btn--default btn-open-shareoptions" href=#btn-open-shareoptions><i class="fa fa-share-alt"></i></a></li><li class="post-action hide-xs"><a class="post-action-btn btn btn--default" target=new href="https://www.facebook.com/sharer/sharer.php?u=https://mo0om.com/2021/postgresql-hooks/"><i class="fa fa-facebook-official"></i></a></li><li class="post-action hide-xs"><a class="post-action-btn btn btn--default" target=new href="https://twitter.com/intent/tweet?text=https://mo0om.com/2021/postgresql-hooks/"><i class="fa fa-twitter"></i></a></li><li class="post-action hide-xs"><a class="post-action-btn btn btn--default" target=new href="https://plus.google.com/share?url=https://mo0om.com/2021/postgresql-hooks/"><i class="fa fa-google-plus"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#disqus_thread><i class="fa fa-comment-o"></i></a></li><li class=post-action><a class="post-action-btn btn btn--default" href=#><i class="fa fa-list"></i></a></li></ul></div></div><div id=share-options-bar class=share-options-bar data-behavior=4><i id=btn-close-shareoptions class="fa fa-close"></i><ul class=share-options><li class=share-option><a class=share-option-btn target=new href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmo0om.com%2F2021%2Fpostgresql-hooks%2F"><i class="fa fa-facebook-official"></i><span>Share on Facebook</span></a></li><li class=share-option><a class=share-option-btn target=new href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fmo0om.com%2F2021%2Fpostgresql-hooks%2F"><i class="fa fa-twitter"></i><span>Share on Twitter</span></a></li><li class=share-option><a class=share-option-btn target=new href="https://plus.google.com/share?url=https%3A%2F%2Fmo0om.com%2F2021%2Fpostgresql-hooks%2F"><i class="fa fa-google-plus"></i><span>Share on Google+</span></a></li></ul></div><div id=share-options-mask class=share-options-mask></div></div><div id=about><div id=about-card><div id=about-btn-close><i class="fa fa-remove"></i></div><img id=about-card-picture src=https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png alt="Author's picture"><h4 id=about-card-name>Han</h4><div id=about-card-bio>힘 찍은 법사, 라떄, 40+, 아재. 꼰머는 아니길.</div><div id=about-card-job><i class="fa fa-briefcase"></i><br>그냥 이것저것 합니다</div><div id=about-card-location><i class="fa fa-map-marker"></i><br>KR</div></div></div><div id=cover style=background-image:url(https://mo0om.com/images/cover.jpg)></div><script src=https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin=anonymous></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin=anonymous></script><script src=https://mo0om.com/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js></script><script lang=javascript>window.onload=updateMinWidth;window.onresize=updateMinWidth;document.getElementById("sidebar").addEventListener("transitionend",updateMinWidth);function updateMinWidth(){var sidebar=document.getElementById("sidebar");var main=document.getElementById("main");main.style.minWidth="";var w1=getComputedStyle(main).getPropertyValue("min-width");var w2=getComputedStyle(sidebar).getPropertyValue("width");var w3=getComputedStyle(sidebar).getPropertyValue("left");main.style.minWidth=`calc(${w1} - ${w2} - ${w3})`;}</script><script>$(document).ready(function(){hljs.configure({classPrefix:'',useBR:false});$('pre.code-highlight > code, pre > code').each(function(i,block){if(!$(this).hasClass('codeblock')){$(this).addClass('codeblock');}
-hljs.highlightBlock(block);});});</script><script>var disqus_config=function(){this.page.url='https:\/\/mo0om.com\/2021\/postgresql-hooks\/';this.page.identifier='\/2021\/postgresql-hooks\/'};(function(){if(window.location.hostname=="localhost"){return;}
-var d=document,s=d.createElement('script');var disqus_shortname='hugo-tranquilpeak-theme';s.src='//'+disqus_shortname+'.disqus.com/embed.js';s.setAttribute('data-timestamp',+new Date());(d.head||d.body).appendChild(s);})();</script></body></html>
+동작을 수행하게 됩니다.</p>
+<p>위 코드에서 하나 더 주의 깊게 살펴봐야하는 부분은, 기존에 설정된 Hook을 복사하는 과정입니다. 똑같은 Hook 을 사용하는 여러개의 모듈들이 존재할 수 있기 때문에
+혹시라도 설치되어있을 Hook 을 복사해놓고, 이를 나중에 호출해 주는 것입니다.</p>
+<p>제대로 코딩을 하려면 사실 Hook 에 정의된 인자 및 구조체를 따라가봐야하는데, 이는 제공하는 각각의 훅마다 다르므로 정의를 보고 인자들을 연구해봐야합니다.
+제가 주로 사용하는 방식은 gdb 이나 clion 같은 툴을 사용하여 debugging 모드로 따라가면서 인자를 분석합니다.</p>
+<h1 id="사용예">사용예</h1>
+<p>Hook 은 엄청나게 많은 contribs 코드에서 사용되고 있습니다.</p>
+<ul>
+<li>auth_deply</li>
+<li>pg_stat_statement</li>
+<li>auth_explain</li>
+</ul>
+<p>그외 PostgreSQL 을 확장한 Citus의 경우도 이 Hook 을 적극적으로 사용하여 Multi-Node Cluster 방식의 OLAP 엔진을 구현했습니다.</p>
+<p>다음은 이 Hook 을 이용하여 간단하게 만들어본  pg_log 에 로그를 필터링하는 모듈입니다.
+<a href="https://github.com/ckh0618/pg_logfilter">https://github.com/ckh0618/pg_logfilter</a> 자세한 사용법은 README 를 참고하시면 됩니다.</p>
+<p>그럼 Happy Coding !</p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://mo0om.com/tags/postgresql/">postgresql</a>
+
+  <a class="tag tag--primary tag--small" href="https://mo0om.com/tags/hook/">hook</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/" data-tooltip="MemoryContext concepts in PostgreSQL">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mo0om.com/2021/postgresql-hooks/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mo0om.com/2021/postgresql-hooks/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mo0om.com/2021/postgresql-hooks/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 Han. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="4">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/" data-tooltip="MemoryContext concepts in PostgreSQL">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mo0om.com/2021/postgresql-hooks/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mo0om.com/2021/postgresql-hooks/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://plus.google.com/share?url=https://mo0om.com/2021/postgresql-hooks/">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="4">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmo0om.com%2F2021%2Fpostgresql-hooks%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fmo0om.com%2F2021%2Fpostgresql-hooks%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://plus.google.com/share?url=https%3A%2F%2Fmo0om.com%2F2021%2Fpostgresql-hooks%2F">
+          <i class="fa fa-google-plus"></i><span>Share on Google&#43;</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://cdn1.iconfinder.com/data/icons/ninja-things-1/1772/ninja-simple-512.png" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Han</h4>
+    
+      <div id="about-card-bio">힘 찍은 법사, 라떄, 40+, 아재. 꼰머는 아니길.</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        그냥 이것저것 합니다
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        KR
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://mo0om.com/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://mo0om.com/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/mo0om.com\/2021\/postgresql-hooks\/';
+          
+            this.page.identifier = '\/2021\/postgresql-hooks\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'hugo-tranquilpeak-theme';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+

@@ -1,3 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>hook on mo0oom - personal blog</title><link>https://mo0om.com/tags/hook/</link><description>Recent content in hook on mo0oom - personal blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 19 Feb 2021 01:42:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/tags/hook/index.xml" rel="self" type="application/rss+xml"/><item><title>PostgreSQL Hooks</title><link>https://mo0om.com/2021/postgresql-hooks/</link><pubDate>Fri, 19 Feb 2021 01:42:46 +0900</pubDate><guid>https://mo0om.com/2021/postgresql-hooks/</guid><description>들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hook on mo0oom - personal blog</title>
+    <link>https://mo0om.com/tags/hook/</link>
+    <description>Recent content in hook on mo0oom - personal blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 19 Feb 2021 01:42:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/tags/hook/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>PostgreSQL Hooks</title>
+      <link>https://mo0om.com/2021/postgresql-hooks/</link>
+      <pubDate>Fri, 19 Feb 2021 01:42:46 +0900</pubDate>
+      
+      <guid>https://mo0om.com/2021/postgresql-hooks/</guid>
+      <description>들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
 Hook Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록 여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.
-이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.</description></item></channel></rss>
+이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.</description>
+    </item>
+    
+  </channel>
+</rss>
