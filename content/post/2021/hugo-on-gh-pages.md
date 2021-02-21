@@ -5,6 +5,8 @@ date: 2021-02-19T10:42:46+09:00
 last_modified_at: 2021-02-19T10:42:46+09:00
 categories: [잡담]
 tags: [HUGO, github pages, https]
+disqusIdentifier: fdsF34ff341
+comments: true
 --- 
 
 원래 기록을 잘 하고 지식을 잘 정리하는 스타일은 아닙니다만, 어느덧 새로운 지식을 익히는 속도보다 그것을 잊는 속도가 빨라져버린 나이가 되어버려 
