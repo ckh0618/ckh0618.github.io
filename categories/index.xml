@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on mo0oom - personal blog</title>
+    <title>Categories on mo0oom - Han&#39;s blog</title>
     <link>https://mo0om.com/categories/</link>
-    <description>Recent content in Categories on mo0oom - personal blog</description>
+    <description>Recent content in Categories on mo0oom - Han&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 19 Feb 2021 01:42:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 19 Feb 2021 10:42:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>database</title>
-      <link>https://mo0om.com/categories/database/</link>
-      <pubDate>Fri, 19 Feb 2021 01:42:46 +0900</pubDate>
+      <title>잡담</title>
+      <link>https://mo0om.com/categories/%EC%9E%A1%EB%8B%B4/</link>
+      <pubDate>Fri, 19 Feb 2021 10:42:46 +0900</pubDate>
       
-      <guid>https://mo0om.com/categories/database/</guid>
+      <guid>https://mo0om.com/categories/%EC%9E%A1%EB%8B%B4/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>데이터베이스</title>
+      <link>https://mo0om.com/categories/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4/</link>
+      <pubDate>Sat, 19 May 2018 01:42:46 +0900</pubDate>
+      
+      <guid>https://mo0om.com/categories/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4/</guid>
       <description></description>
     </item>
     
