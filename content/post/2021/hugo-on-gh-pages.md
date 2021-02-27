@@ -5,7 +5,6 @@ date: 2021-02-19T10:42:46+09:00
 last_modified_at: 2021-02-19T10:42:46+09:00
 categories: [잡담]
 tags: [HUGO, github pages, https]
-disqusIdentifier: fdsF34ff341
 comments: true
 --- 
 
