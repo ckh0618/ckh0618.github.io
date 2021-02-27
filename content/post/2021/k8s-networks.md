@@ -1,9 +1,9 @@
 ---
 published: true
 title: packets on k8s networks 
-date: 2021-02-28
-last_modified_at: 2021-02-28
-categories: [youtube 로 공부]
+date: 2021-02-28T04:07:46+09:00
+last_modified_at: 2021-02-28T04:32:46+09:00
+categories: [k8s]
 tags: [k8s,networks]
 comments: true
 --- 
@@ -85,5 +85,5 @@ Service 라는 추상화의 구현체가 iptable 설정이고, VIP 라는걸 알
 * NetworkPolicy 를 통해서 세팅  
 
 
-아주 만족스러운 좋은 영상입니다. 네트웍에 대한 가상화기술이나 iptable 등의 기술에 익숙하지 않아서 k8s 을 처음배울때 Service 개념이 진짜 혼란스러웠는데, 
-이 영상을 보고 나서 큰 부분이 정리가 되었습니다. 
+좋은 영상입니다. 네트웍에 대한 가상화기술이나 iptable 등의 기술에 익숙하지 않아서 k8s 을 처음배울때 Service 개념이 진짜 혼란스러웠는데, 
+이 영상을 보고 나서 큰 부분이 정리가 되었습니다. 오래전 영상이라 현재와는 좀 다르게 동작할수도 있겠지만 기본적인 개념은 변하지 않을테니 만족스럽습니다. 
