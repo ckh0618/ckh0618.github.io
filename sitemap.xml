@@ -3,7 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://mo0om.com/categories/</loc>
-    <lastmod>2021-02-19T10:42:46+09:00</lastmod>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
+  </url><url>
+    <loc>https://mo0om.com/tags/k8s/</loc>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
+  </url><url>
+    <loc>https://mo0om.com/categories/k8s/</loc>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
+  </url><url>
+    <loc>https://mo0om.com/</loc>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
+  </url><url>
+    <loc>https://mo0om.com/tags/networks/</loc>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
+  </url><url>
+    <loc>https://mo0om.com/2021/packets-on-k8s-networks/</loc>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
+  </url><url>
+    <loc>https://mo0om.com/post/</loc>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
+  </url><url>
+    <loc>https://mo0om.com/tags/</loc>
+    <lastmod>2021-02-28T04:07:46+09:00</lastmod>
   </url><url>
     <loc>https://mo0om.com/2021/gh-pages-with-hugo/</loc>
     <lastmod>2021-02-19T10:42:46+09:00</lastmod>
@@ -15,15 +36,6 @@
     <lastmod>2021-02-19T10:42:46+09:00</lastmod>
   </url><url>
     <loc>https://mo0om.com/tags/hugo/</loc>
-    <lastmod>2021-02-19T10:42:46+09:00</lastmod>
-  </url><url>
-    <loc>https://mo0om.com/</loc>
-    <lastmod>2021-02-19T10:42:46+09:00</lastmod>
-  </url><url>
-    <loc>https://mo0om.com/post/</loc>
-    <lastmod>2021-02-19T10:42:46+09:00</lastmod>
-  </url><url>
-    <loc>https://mo0om.com/tags/</loc>
     <lastmod>2021-02-19T10:42:46+09:00</lastmod>
   </url><url>
     <loc>https://mo0om.com/categories/%EC%9E%A1%EB%8B%B4/</loc>

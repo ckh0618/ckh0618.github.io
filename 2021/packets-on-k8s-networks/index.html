@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.81.0 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="author" content="Han">
+<meta name="keywords" content="">
+<meta name="description" content="들어가며 k8s 안에서 패킷이 어떻게 움직이는지 진짜 궁금했었습니다. 실제 어떻게 동작하는지 잘 알려주는 훌륭하게 개념을 설명하는 유튜브를 찾았는데, 이를 공부하면서 정리를 해봤습니다. 대충 이해한거라 틀린 내용이 있을 수도 있습니다. 네트웍을 잘 몰라서 이해한대로 썼는데 언제나 그렇듯 더블체크는 늘 필요합니다.
+Life of Packet   정리 network 기술 소개  모든 POD 은 k8s 안에서 통신가능한 진짜 IP 를 가진다. 도커와 같이 포트매핑을 하는 방식을 사용하지 않는다. POD IP 는 다른 POD 에서 접근가능한 진짜 아이피다.">
+
+
+<meta property="og:description" content="들어가며 k8s 안에서 패킷이 어떻게 움직이는지 진짜 궁금했었습니다. 실제 어떻게 동작하는지 잘 알려주는 훌륭하게 개념을 설명하는 유튜브를 찾았는데, 이를 공부하면서 정리를 해봤습니다. 대충 이해한거라 틀린 내용이 있을 수도 있습니다. 네트웍을 잘 몰라서 이해한대로 썼는데 언제나 그렇듯 더블체크는 늘 필요합니다.
+Life of Packet   정리 network 기술 소개  모든 POD 은 k8s 안에서 통신가능한 진짜 IP 를 가진다. 도커와 같이 포트매핑을 하는 방식을 사용하지 않는다. POD IP 는 다른 POD 에서 접근가능한 진짜 아이피다.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="packets on k8s networks">
+<meta name="twitter:title" content="packets on k8s networks">
+<meta property="og:url" content="https://mo0om.com/2021/packets-on-k8s-networks/">
+<meta property="twitter:url" content="https://mo0om.com/2021/packets-on-k8s-networks/">
+<meta property="og:site_name" content="mo0oom - Han&#39;s blog">
+<meta property="og:description" content="들어가며 k8s 안에서 패킷이 어떻게 움직이는지 진짜 궁금했었습니다. 실제 어떻게 동작하는지 잘 알려주는 훌륭하게 개념을 설명하는 유튜브를 찾았는데, 이를 공부하면서 정리를 해봤습니다. 대충 이해한거라 틀린 내용이 있을 수도 있습니다. 네트웍을 잘 몰라서 이해한대로 썼는데 언제나 그렇듯 더블체크는 늘 필요합니다.
+Life of Packet   정리 network 기술 소개  모든 POD 은 k8s 안에서 통신가능한 진짜 IP 를 가진다. 도커와 같이 포트매핑을 하는 방식을 사용하지 않는다. POD IP 는 다른 POD 에서 접근가능한 진짜 아이피다.">
+<meta name="twitter:description" content="들어가며 k8s 안에서 패킷이 어떻게 움직이는지 진짜 궁금했었습니다. 실제 어떻게 동작하는지 잘 알려주는 훌륭하게 개념을 설명하는 유튜브를 찾았는데, 이를 공부하면서 정리를 해봤습니다. 대충 이해한거라 틀린 내용이 있을 수도 있습니다. 네트웍을 잘 몰라서 이해한대로 썼는데 언제나 그렇듯 더블체크는 늘 필요합니다.
+Life of Packet   정리 network 기술 소개  모든 POD 은 k8s 안에서 통신가능한 진짜 IP 를 가진다. 도커와 같이 포트매핑을 하는 방식을 사용하지 않는다. POD IP 는 다른 POD 에서 접근가능한 진짜 아이피다.">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2021-02-28T04:07:46">
+  
+  
+    <meta property="article:modified_time" content="2021-02-28T04:07:46">
+  
+  
+  
+    
+      <meta property="article:section" content="k8s">
+    
+  
+  
+    
+      <meta property="article:tag" content="k8s">
+    
+      <meta property="article:tag" content="networks">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://mo0om.com/avatar.png">
+  <meta property="twitter:image" content="https://mo0om.com/avatar.png">
+
+
+    <title>packets on k8s networks</title>
+
+    <link rel="icon" href="https://mo0om.com/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://mo0om.com/2021/packets-on-k8s-networks/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://mo0om.com/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-115519367-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://mo0om.com/">mo0oom - Han&#39;s blog</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://mo0om.com/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://mo0om.com/avatar.png" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://mo0om.com/#about">
+          <img class="sidebar-profile-picture" src="https://mo0om.com/avatar.png" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Han</h4>
+        
+          <h5 class="sidebar-profile-bio">Database Engineeer, Developer</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://mo0om.com/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/ckh0618" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaIn
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      packets on k8s networks
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2021-02-28T04:07:46&#43;09:00">
+        
+  February 28, 2021
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://mo0om.com/categories/k8s">k8s</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="들어가며">들어가며</h1>
+<p>k8s 안에서 패킷이 어떻게 움직이는지 진짜 궁금했었습니다. 실제 어떻게 동작하는지 잘 알려주는
+훌륭하게 개념을 설명하는 유튜브를 찾았는데, 이를 공부하면서 정리를 해봤습니다. 대충 이해한거라 틀린 내용이 있을 수도 있습니다.
+네트웍을 잘 몰라서 이해한대로 썼는데 언제나 그렇듯 더블체크는 늘 필요합니다.</p>
+<h1 id="life-of-packet">Life of Packet</h1>
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+  <iframe src="https://www.youtube.com/embed/0Omvgd7Hg1I" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
+</div>
+
+<h1 id="정리">정리</h1>
+<h2 id="network-기술-소개">network 기술 소개</h2>
+<ul>
+<li>모든 POD 은 k8s 안에서 통신가능한 진짜 IP 를 가진다. 도커와 같이 포트매핑을 하는 방식을 사용하지 않는다.</li>
+<li>POD IP 는 다른 POD 에서 접근가능한 진짜 아이피다. 여기서 POD 은 같은 노드가 아닌 다른 노드에 위치할 수 있다.</li>
+<li>리눅스에서 제공하는 Network Namespace 과 virtual interface 를 통해서 이를 구현하였다.</li>
+<li>network namespace 에 대한 간략한 소개. 자세한건 인터넷 찾아봐라.</li>
+</ul>
+<p>기본으로 Network는 하나의 큰 공통자원이라 변경 내용이 전체 프로세스에 영향을 미칩니다. 이러한 특성은 가상화에서 큰 문제를 일으킬수 있어
+namespace 라는 개념으로 나누고, 서로 격리된 형태로 인터페이스, iptables, routing 등을 세팅할 수 있다고 합니다. 기본으로 OS 를
+설치하면 root namespace 가 있고, namespace 를 여러개 만들어서 격리를 한 후 root namespace 와 통신을 통해 외부와 통신합니다.
+다음 글에 설명이 잘 되어있습니다. ( <a href="https://www.joinc.co.kr/w/man/12/NetworkNamespace">https://www.joinc.co.kr/w/man/12/NetworkNamespace</a> )</p>
+<ul>
+<li>PDO 별로 namespace 가 생성되고, root namespace 와 서로 연결할 수 있는 virtual interface 가 생긴다.</li>
+<li>여러개의 POD 이 생겼다면 여러개의 namespace 가 있을꺼고, root namespace 에는 이들간의 virtual interface 간의 패킷을 릴레이하기 위한 브릿지가 생성된다.</li>
+<li>브릿지도 궁금하면 검색해봐라</li>
+</ul>
+<p>검색해봤습니다. <a href="https://ops.tips/blog/using-network-namespaces-and-bridge-to-isolate-servers/">https://ops.tips/blog/using-network-namespaces-and-bridge-to-isolate-servers/</a> 여기 설명이 잘되어있습니다. 간단히 양 네트워크를 연결해주는 다리 라고 생각합시다.</p>
+<ul>
+<li>같은 노드끼리 POD 의 통신은 POD -&gt; POD namespaced veth -&gt; root veth -&gt; bridge -&gt; root veth -&gt; POD namespaced veth -&gt; POD 의 순으로 이뤄진다.</li>
+<li>다른 노드에 있는 POD 과 통신하기 위해서는 POD -&gt; POD namespaced veth -&gt; root veth -&gt; bridge -&gt; eth0 -&gt; network -&gt; eth0 -&gt; bridge -&gt; root veth 순으로 이루어진다.</li>
+<li>Overlay 에 대한 설명. 간단히 말하면 Packet 을 또 한번 감싸는 패킷을 만들어서 사용하는 기술 ( packet-in-packet )</li>
+<li>Flannel 이라는 CoreOS 에서 만든 Overlay 기술을 이용한 프로그램을 사용하는 예를 보여줌.</li>
+<li>POD1 에서 다른노드의 POD4 로 패킷이 전달될때 브릿지 상에 POD4 의 IP 정보는 알수없음. 그래서 flannel 이 패킷을 가로체서 앞에 해더를 덧붙임.</li>
+<li>flannel 은 어느 노드에 POD4가 있는지 알고 있다. 이렇게 패킷을 한번 더 감싸 eth0 을 통해 외부로 내보내면 POD 4가 있는 노드가 받고 이 헤더를 제거 한 후 브릿지로 보냄.</li>
+<li>헤더에는 POD4 가 DST 정보로 박혀있으니 브릿지를 통해서 원하는 POD 으로 패킷이 전달됨.</li>
+</ul>
+<h2 id="service">Service</h2>
+<ul>
+<li>POD 은 언제든지 죽을 수 있고, 다시 살아나면서 다른 IP 로 바뀔수도 있고 늘어날수도 줄어들수도 있다. 그래서 POD IP 를 사용할 수 없다.</li>
+<li>그래서 서비스라는 추상화된 개념을 도입했고, 서비스는 바뀌지 않는 VIP 를 제공한다. 그 다음 POD 을 가르키도록 한다.</li>
+<li>k8s 에서 POD 을 그루핑하여 가르키는 방법은 바로 selector 를 이용한 방식</li>
+<li>selector 만 있다면 라우팅할때마다 k8s api 서버에 물어봐야하는데 그건 너무 비효율적. 그래서 endpoint 가 등장했다.</li>
+<li>endpoint 에 pod 의 아이피를 지정해놓고 이를 가지고 라우팅.</li>
+</ul>
+<p>그래서 Service 와 Endpoint 가 한쌍으로 생기는 거였군요. 저는 이 부분이 가장 인상깊었습니다. 이제 Service 를 가지고 Packet 이 이동하는 방식을 설명해줍니다.</p>
+<ul>
+<li>pod 1 이 svc 을 향해 간다면, 브릿지 이후 iptable 을 통과한다.</li>
+<li>iptable 을 통과하면서 dst 는 실제 라우팅되는 pod 아이피로 변경. DNAT 이고 conntrack 이용하여 바꿈.</li>
+<li>이제 DNAT 을 통해서 eth0 을 통해 인터넷으로 나감. 이후는 위에서 설명한 개념과 동일</li>
+<li>다시 돌아올때 eth0 을 통해서 패킷이 들어오면 conntrack 에 정보를 뒤져서 Source 를 바꿔줌. DNAT 한걸 풀어줌</li>
+<li>이후 는 전과 동일</li>
+<li>iptable 의 설정은 kubeproxy 를 통해서 이루어짐. iptable 을 관리하는 Controller</li>
+<li>사용자들이 사용하기 쉽게 서비스는 자신의 이름을 DNS 에 등록한다.</li>
+</ul>
+<p>Service 라는 추상화의 구현체가 iptable 설정이고, VIP 라는걸 알았습니다.<br>
+이제 외부와 통신을 어떻게 하는지 설명합니다.</p>
+<ul>
+<li>클러스터 외부와의 통신은 NAT 을 통해서 이루어진다. NODE 에서 8.8.8.8 을 날린다면 클러스터 레벨에서 설정된 1:1 NAT 을 통해서 source 가 Cluster 전용 IP 에서 External IP 로 변신해서 나간다.</li>
+<li>돌아올때도 NAT 을 통해서 External IP 의 Destination 이 Cluster 전용 IP 로 바뀌어서 전달됨.</li>
+<li>POD 에서 외부와 통신한다면 NAT 에서 모두 패킷이 드랍된다. NAT 은 노드의 아이피만 알기 떄문이다.</li>
+<li>그래서 Masquerade 기법을 (SNAT) 통해서 POD 아이피를 NODE IP로 변경하는 작업이 필요하다.</li>
+</ul>
+<h2 id="load-balancer">Load Balancer</h2>
+<ul>
+<li>Service 의 Type 을 Load Balancer 로 세팅하면, 클러스터 아이피와 별개로 외부에서 접근가능한 IP 가 생성된다.</li>
+<li>Load Balancer 는 노드들만 알고 POD 이 어떻게 배치되었는지는 모르기 때문에 노드별로 트레픽이 불균형하게 들어갈 수 있다.</li>
+<li>이를 맞추는 방법중에 하나가 iptable 을 가지고 하는 방법인데, 일단 Load Balancer 가 노드에게 트래픽을 보내면 노드에 설정된 iptable 정보를 통해서 다른 노드로 다시 전달</li>
+<li>이 과정에서 HOP 이 발생.</li>
+<li>이런 상황이 발생하니까 사용자가 잘 알아서 노드에 POD 을 분배해야함. 잘 알고 진행해야한다.</li>
+</ul>
+<h2 id="network-policy">Network policy</h2>
+<ul>
+<li>POD 이나 서비스끼리 자유롭게 통신이 가능한데, 보안상의 정책등의 이유로 제어가 필요할때가 있다.</li>
+<li>예를 들어 일반적인 3-tier 어플리케이션의 경우 Frontend 가 다른 Frontend POD 에 접근하거나, Frontend 가 DB 에 접근하는 경우를 원천 봉쇄하고 싶을떄가 있다.</li>
+<li>NetworkPolicy 를 통해서 세팅</li>
+</ul>
+<p>좋은 영상입니다. 네트웍에 대한 가상화기술이나 iptable 등의 기술에 익숙하지 않아서 k8s 을 처음배울때 Service 개념이 진짜 혼란스러웠는데,
+이 영상을 보고 나서 큰 부분이 정리가 되었습니다. 오래전 영상이라 현재와는 좀 다르게 동작할수도 있겠지만 기본적인 개념은 변하지 않을테니 만족스럽습니다.</p>
+
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://mo0om.com/tags/k8s/">k8s</a>
+
+  <a class="tag tag--primary tag--small" href="https://mo0om.com/tags/networks/">networks</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2021/gh-pages-with-hugo/" data-tooltip="GH-Pages with HUGO">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mo0om.com/2021/packets-on-k8s-networks/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mo0om.com/2021/packets-on-k8s-networks/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+                <div id="disqus_thread">
+  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2021 Han. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--disabled">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2021/gh-pages-with-hugo/" data-tooltip="GH-Pages with HUGO">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://mo0om.com/2021/packets-on-k8s-networks/">
+              <i class="fa fa-facebook-official"></i>
+            </a>
+          </li>
+        
+          <li class="post-action hide-xs">
+            <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://mo0om.com/2021/packets-on-k8s-networks/">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+        
+      
+      
+        <li class="post-action">
+          <a class="post-action-btn btn btn--default" href="#disqus_thread">
+            <i class="fa fa-comment-o"></i>
+          </a>
+        </li>
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmo0om.com%2F2021%2Fpackets-on-k8s-networks%2F">
+          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+        </a>
+      </li>
+    
+      <li class="share-option">
+        <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fmo0om.com%2F2021%2Fpackets-on-k8s-networks%2F">
+          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://mo0om.com/avatar.png" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Han</h4>
+    
+      <div id="about-card-bio">Database Engineeer, Developer</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        그냥 이것저것 합니다
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        KR
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://mo0om.com/images/cover.jpg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://mo0om.com/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+      <script>
+        var disqus_config = function () {
+          this.page.url = 'https:\/\/mo0om.com\/2021\/packets-on-k8s-networks\/';
+          
+            this.page.identifier = '\/2021\/packets-on-k8s-networks\/'
+          
+        };
+        (function() {
+          
+          
+          if (window.location.hostname == "localhost") {
+            return;
+          }
+          var d = document, s = d.createElement('script');
+          var disqus_shortname = 'mo0om123';
+          s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        })();
+      </script>
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
