@@ -336,6 +336,12 @@ push 하는 예제입니다.</p>
 <p>아마 다음과 같이 세팅되면 될겁니다.</p>
 <p><img src="https://mo0om.com/hugo-on-gh-pages/github_page_settings.png" alt="설정예제"></p>
 <p>이제 장소는 구비되었으니 내용만 잘 채우면 되겠군요 !</p>
+<h1 id="updated-">Updated !</h1>
+<h3 id="20210306">2021/03/06</h3>
+<p>disqus 로 처음에 세팅했다가 광고가 너무 덕지덕지 붙어서 utterances 로 변경하였습니다.</p>
+<p>layouts/partial/post/disqus.html 파일을 생성하고, utterances 에서 만들어진 스크립트를 끼워 넣으면 됩니다.
+utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://utteranc.es/</a> 를 참조하세요. github 의 issue 를 사용하는 건데, 꽤 좋습니다.<br>
+어차피 이 블로그의 타겟 독자는 IT 엔지니어 또는 개발자니 github 계정은 다 있으시겠죠 ?</p>
 
               
             </div>
@@ -423,9 +429,13 @@ push 하는 예제입니다.</p>
 
             
               
-                <div id="disqus_thread">
-  <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
+                <script src="https://utteranc.es/client.js"
+        repo="ckh0618/ckh0618.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
               
             
           </div>
