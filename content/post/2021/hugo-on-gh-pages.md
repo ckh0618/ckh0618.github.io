@@ -129,4 +129,3 @@ disqus 로 처음에 세팅했다가 광고가 너무 덕지덕지 붙어서 utt
 
 layouts/partial/post/disqus.html 파일을 생성하고, utterances 에서 만들어진 스크립트를 끼워 넣으면 됩니다. 
 utterances 의 자세한 설명은 https://utteranc.es/ 를 참조하세요. github 의 issue 를 사용하는 건데, 꽤 좋습니다.  
-어차피 이 블로그의 타겟 독자는 IT 엔지니어 또는 개발자니 github 계정은 다 있으시겠죠 ? 

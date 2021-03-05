@@ -14,7 +14,7 @@
 
 baseURL = "https://mo0om.com/"
 languageCode = "en-us"
-defaultContentLanguage = "en-us"
+defaultContentLanguage = "ko"
 title = "mo0oom - Han's blog"
 theme = "hugo-tranquilpeak-theme"
 disqusShortname = "mo0om123"
@@ -33,7 +33,7 @@ canonifyurls = true
 [author]
   name = "Han"
   bio = "Database Engineeer, Developer"
-  job = "그냥 이것저것 합니다"
+  job = "그냥 이것저것 합니다. ck"
   location = "KR"
   # Your Gravatar email. Overwrite `author.picture` everywhere in the blog
   #gravatarEmail = "thibaud.lepretre@gmail.com"
@@ -106,13 +106,13 @@ canonifyurls = true
   syntaxHighlighter = "highlight.js"
 
   # Hide sidebar on all article page to let article take full width to improve reading, and enjoy wide images and cover images. (true: enable, false: disable)
-  clearReading = true
+  clearReading = false
 
   # Define categories will create hierarchy between parents: `categories = ["foo", "bar"]` will consider "bar" a sub-category of "foo".
   # If false it will flat categories.
   hierarchicalCategories = true
 
-  description = "Hugo tranquilpeak theme demo"
+  description = "Notes about IT knowleges, lesson learned"
 
   # Customization
   # Define the behavior of the sidebar
@@ -152,7 +152,7 @@ canonifyurls = true
   autoThumbnailImage = true
 
   # Your favicon path, default is "/favicon.png"
-  # favicon = "/favicon.png"
+  favicon = "/avatar.png"
 
   # Header configuration
   # The link at the right of the header is customizable
@@ -168,8 +168,8 @@ canonifyurls = true
 
   # Custom CSS. Put here your custom CSS files. They are loaded after the theme CSS;
   # they have to be referred from static root. Example
-  # [[params.customCSS]]
-  #   href = "css/mystyle.css"
+  [[params.customCSS]]
+    href = "css/mystyle.css"
 
   # Custom JS. Put here your custom JS files. They are loaded after the theme JS;
   # they have to be referred from static root. Example
@@ -201,5 +201,5 @@ canonifyurls = true
   #   url = "/#about"
 
   # Customize copyright value "© 2017 <CUSTOMIZATION>. All Rights Reserved"
-  # [params.footer]
-  #   copyright = "<a href=\"https://github.com/kakawait\">kakawait</a>"
+  [params.footer]
+    copyright = "<a href=\"https://mo0om.com\">Han, mo0om.com</a>"
