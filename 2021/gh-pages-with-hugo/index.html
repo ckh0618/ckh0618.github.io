@@ -24,7 +24,7 @@
 과거에 만들어봤던 github page 는 Jeykyll 의 오랜 빌드타임과 잘 모르는 ruby, 테마에서 사용하는 javascript, 그리고 의존성, 가끔 github 에서 보내는 보안경고등에 질려서 과감히 Jekyll 을 버리고 HUGO 를 선택하게 되었습니다.">
 <meta name="twitter:description" content="원래 기록을 잘 하고 지식을 잘 정리하는 스타일은 아닙니다만, 어느덧 새로운 지식을 익히는 속도보다 그것을 잊는 속도가 빨라져버린 나이가 되어버려 무언가 정리할 공간이 필요하다는 생각이 들었습니다. 그래서 예전에 처박아놓고 관리안했던 github page 를 고쳐서 사용해보기로 결심했고, 하루 정도 시간을 투자해서 걸려서 이 사이트를 만들었습니다.
 과거에 만들어봤던 github page 는 Jeykyll 의 오랜 빌드타임과 잘 모르는 ruby, 테마에서 사용하는 javascript, 그리고 의존성, 가끔 github 에서 보내는 보안경고등에 질려서 과감히 Jekyll 을 버리고 HUGO 를 선택하게 되었습니다.">
-<meta property="og:locale" content="en-us">
+<meta property="og:locale" content="ko">
 
   
     <meta property="article:published_time" content="2021-02-19T10:42:46">
@@ -67,7 +67,7 @@
 
     <title>GH-Pages with HUGO</title>
 
-    <link rel="icon" href="https://mo0om.com/favicon.png">
+    <link rel="icon" href="https://mo0om.com/avatar.png">
     
 
     
@@ -82,6 +82,10 @@
     
     <link rel="stylesheet" href="https://mo0om.com/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
     
+    
+      
+        <link rel="stylesheet"  href="https://mo0om.com/css/mystyle.css">
+      
     
 
     
@@ -105,7 +109,7 @@ if (!doNotTrack) {
 
   <body>
     <div id="blog">
-      <header id="header" data-behavior="5">
+      <header id="header" data-behavior="2">
   <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
   <div class="header-title">
     <a class="header-title-link" href="https://mo0om.com/">mo0oom - Han&#39;s blog</a>
@@ -118,19 +122,19 @@ if (!doNotTrack) {
     
     
       
-        <img class="header-picture" src="https://mo0om.com/avatar.png" alt="Author&#39;s picture" />
+        <img class="header-picture" src="https://mo0om.com/avatar.png" alt="" />
       
     
     </a>
   
 </header>
 
-      <nav id="sidebar" data-behavior="5">
+      <nav id="sidebar" data-behavior="2">
   <div class="sidebar-container">
     
       <div class="sidebar-profile">
         <a href="https://mo0om.com/#about">
-          <img class="sidebar-profile-picture" src="https://mo0om.com/avatar.png" alt="Author&#39;s picture" />
+          <img class="sidebar-profile-picture" src="https://mo0om.com/avatar.png" alt="" />
         </a>
         <h4 class="sidebar-profile-name">Han</h4>
         
@@ -215,7 +219,7 @@ if (!doNotTrack) {
 
       
 
-      <div id="main" data-behavior="5"
+      <div id="main" data-behavior="2"
         class="
                hasCoverMetaIn
                ">
@@ -233,14 +237,14 @@ if (!doNotTrack) {
     
       <time itemprop="datePublished" datetime="2021-02-19T10:42:46&#43;09:00">
         
-  February 19, 2021
+   19, 2021
 
       </time>
     
     
   
   
-    <span>in</span>
+    <span></span>
     
       <a class="category-link" href="https://mo0om.com/categories/%ec%9e%a1%eb%8b%b4">잡담</a>
     
@@ -340,8 +344,7 @@ push 하는 예제입니다.</p>
 <h3 id="20210306">2021/03/06</h3>
 <p>disqus 로 처음에 세팅했다가 광고가 너무 덕지덕지 붙어서 utterances 로 변경하였습니다.</p>
 <p>layouts/partial/post/disqus.html 파일을 생성하고, utterances 에서 만들어진 스크립트를 끼워 넣으면 됩니다.
-utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://utteranc.es/</a> 를 참조하세요. github 의 issue 를 사용하는 건데, 꽤 좋습니다.<br>
-어차피 이 블로그의 타겟 독자는 IT 엔지니어 또는 개발자니 github 계정은 다 있으시겠죠 ?</p>
+utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://utteranc.es/</a> 를 참조하세요. github 의 issue 를 사용하는 건데, 꽤 좋습니다.</p>
 
               
             </div>
@@ -352,7 +355,7 @@ utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://uttera
                 
                 
                   <div class="post-footer-tags">
-                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    <span class="text-color-light text-small"></span><br/>
                     
   <a class="tag tag--primary tag--small" href="https://mo0om.com/tags/hugo/">HUGO</a>
 
@@ -374,14 +377,14 @@ utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://uttera
                 <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2021/packets-on-k8s-networks/" data-tooltip="packets on k8s networks">
               
                   <i class="fa fa-angle-left"></i>
-                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                  <span class="hide-xs hide-sm text-small icon-ml"></span>
                 </a>
             </li>
             <li class="post-action">
               
                 <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/" data-tooltip="MemoryContext concepts in PostgreSQL">
               
-                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <span class="hide-xs hide-sm text-small icon-mr"></span>
                   <i class="fa fa-angle-right"></i>
                 </a>
             </li>
@@ -442,12 +445,12 @@ utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://uttera
         </article>
         <footer id="footer" class="main-content-wrap">
   <span class="copyrights">
-    &copy; 2021 Han. All Rights Reserved
+    &copy; 2021 <a href="https://mo0om.com">Han, mo0om.com</a>. 
   </span>
 </footer>
 
       </div>
-      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
         <div class="post-actions-wrap">
   
       <nav >
@@ -458,14 +461,14 @@ utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://uttera
                 <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2021/packets-on-k8s-networks/" data-tooltip="packets on k8s networks">
               
                   <i class="fa fa-angle-left"></i>
-                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                  <span class="hide-xs hide-sm text-small icon-ml"></span>
                 </a>
             </li>
             <li class="post-action">
               
                 <a class="post-action-btn btn btn--default tooltip--top" href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/" data-tooltip="MemoryContext concepts in PostgreSQL">
               
-                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <span class="hide-xs hide-sm text-small icon-mr"></span>
                   <i class="fa fa-angle-right"></i>
                 </a>
             </li>
@@ -512,19 +515,19 @@ utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://uttera
 </div>
 
       </div>
-      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+      <div id="share-options-bar" class="share-options-bar" data-behavior="2">
   <i id="btn-close-shareoptions" class="fa fa-close"></i>
   <ul class="share-options">
     
       <li class="share-option">
         <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmo0om.com%2F2021%2Fgh-pages-with-hugo%2F">
-          <i class="fa fa-facebook-official"></i><span>Share on Facebook</span>
+          <i class="fa fa-facebook-official"></i><span>%!(EXTRA string=Facebook)</span>
         </a>
       </li>
     
       <li class="share-option">
         <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https%3A%2F%2Fmo0om.com%2F2021%2Fgh-pages-with-hugo%2F">
-          <i class="fa fa-twitter"></i><span>Share on Twitter</span>
+          <i class="fa fa-twitter"></i><span>%!(EXTRA string=Twitter)</span>
         </a>
       </li>
     
@@ -539,7 +542,7 @@ utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://uttera
       <i class="fa fa-remove"></i>
     </div>
     
-      <img id="about-card-picture" src="https://mo0om.com/avatar.png" alt="Author&#39;s picture" />
+      <img id="about-card-picture" src="https://mo0om.com/avatar.png" alt="" />
     
     <h4 id="about-card-name">Han</h4>
     
@@ -549,7 +552,7 @@ utterances 의 자세한 설명은 <a href="https://utteranc.es/">https://uttera
       <div id="about-card-job">
         <i class="fa fa-briefcase"></i>
         <br/>
-        그냥 이것저것 합니다
+        그냥 이것저것 합니다. ck
       </div>
     
     
