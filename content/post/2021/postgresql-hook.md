@@ -7,6 +7,7 @@ categories: [데이터베이스]
 tags: [postgresql, hook]
 --- 
 
+
 # 들어가며   
 
 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다. 
@@ -29,70 +30,8 @@ Hook 을 사용하는 가장 간단한 예제는 contribs 에 있는 auth_delay 
 
 몇줄 안되니까 전체를 보면 
 
-```
-#include "postgres.h"
+{{< gist ckh0618 bd2fc22ddd00a819f3f40984f853ce82 >}}
 
-#include <limits.h>
-
-#include "libpq/auth.h"
-#include "port.h"
-#include "utils/guc.h"
-#include "utils/timestamp.h"
-
-PG_MODULE_MAGIC;
-
-void		_PG_init(void);
-
-/* GUC Variables */
-static int	auth_delay_milliseconds;
-
-/* Original Hook */
-static ClientAuthentication_hook_type original_client_auth_hook = NULL;
-
-/*
- * Check authentication
- */
-static void
-auth_delay_checks(Port *port, int status)
-{
-	/*
-	 * Any other plugins which use ClientAuthentication_hook.
-	 */
-	if (original_client_auth_hook)
-		original_client_auth_hook(port, status);
-
-	/*
-	 * Inject a short delay if authentication failed.
-	 */
-	if (status != STATUS_OK)
-	{
-		pg_usleep(1000L * auth_delay_milliseconds);
-	}
-}
-
-/*
- * Module Load Callback
- */
-void
-_PG_init(void)
-{
-	/* Define custom GUC variables */
-	DefineCustomIntVariable("auth_delay.milliseconds",
-							"Milliseconds to delay before reporting authentication failure",
-							NULL,
-							&auth_delay_milliseconds,
-							0,
-							0, INT_MAX / 1000,
-							PGC_SIGHUP,
-							GUC_UNIT_MS,
-							NULL,
-							NULL,
-							NULL);
-	/* Install Hooks */
-	original_client_auth_hook = ClientAuthentication_hook;
-	ClientAuthentication_hook = auth_delay_checks;
-}
-```
 
 _PG_init() 은 모듈이 로딩될떄 호출되는 함수라는 정도만 이해하면, 그리 이해하는데 어려운 코드는 아닐겁니다.  
 
