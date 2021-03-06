@@ -271,69 +271,9 @@ Hook 들이 정리되고 있습니다.</p>
 <p>Hook 을 사용하는 가장 간단한 예제는 contribs 에 있는 auth_delay 입니다. 80여줄도 안되는 짧은 코드로
 사용자의 인증이 실패했을때 sleep 을 줘서 무작위대입 공격을 막기 위한 기능을 구현했습니다.</p>
 <p>몇줄 안되니까 전체를 보면</p>
-<pre><code>#include &quot;postgres.h&quot;
+<script type="application/javascript" src="https://gist.github.com/ckh0618/bd2fc22ddd00a819f3f40984f853ce82.js"></script>
 
-#include &lt;limits.h&gt;
-
-#include &quot;libpq/auth.h&quot;
-#include &quot;port.h&quot;
-#include &quot;utils/guc.h&quot;
-#include &quot;utils/timestamp.h&quot;
-
-PG_MODULE_MAGIC;
-
-void		_PG_init(void);
-
-/* GUC Variables */
-static int	auth_delay_milliseconds;
-
-/* Original Hook */
-static ClientAuthentication_hook_type original_client_auth_hook = NULL;
-
-/*
- * Check authentication
- */
-static void
-auth_delay_checks(Port *port, int status)
-{
-	/*
-	 * Any other plugins which use ClientAuthentication_hook.
-	 */
-	if (original_client_auth_hook)
-		original_client_auth_hook(port, status);
-
-	/*
-	 * Inject a short delay if authentication failed.
-	 */
-	if (status != STATUS_OK)
-	{
-		pg_usleep(1000L * auth_delay_milliseconds);
-	}
-}
-
-/*
- * Module Load Callback
- */
-void
-_PG_init(void)
-{
-	/* Define custom GUC variables */
-	DefineCustomIntVariable(&quot;auth_delay.milliseconds&quot;,
-							&quot;Milliseconds to delay before reporting authentication failure&quot;,
-							NULL,
-							&amp;auth_delay_milliseconds,
-							0,
-							0, INT_MAX / 1000,
-							PGC_SIGHUP,
-							GUC_UNIT_MS,
-							NULL,
-							NULL,
-							NULL);
-	/* Install Hooks */
-	original_client_auth_hook = ClientAuthentication_hook;
-	ClientAuthentication_hook = auth_delay_checks;
-}
-</code></pre><p>_PG_init() 은 모듈이 로딩될떄 호출되는 함수라는 정도만 이해하면, 그리 이해하는데 어려운 코드는 아닐겁니다.</p>
+<p>_PG_init() 은 모듈이 로딩될떄 호출되는 함수라는 정도만 이해하면, 그리 이해하는데 어려운 코드는 아닐겁니다.</p>
 <p>PostgreSQL 은 각각의 주요 모듈의 헤더파일마다 _hook_type 의 접미사를 가진 Hook 을 정의해놨습니다. 여기서 예를 든
 ClientClientAuthentication_hook_type 과 변수는 auth.h / auth.c 파일에 다음과 같이 정의되어있습니다.</p>
 <pre><code>typedef void (*ClientAuthentication_hook_type) (Port *, int);
