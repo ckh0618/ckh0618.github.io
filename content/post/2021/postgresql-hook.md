@@ -1,8 +1,8 @@
 ---
 published: true
 title: PostgreSQL Hooks   
-date: 2018-02-19T11:43:46+09:00
-last_modified_at: 2019-03-09T03:30:00+09:00
+date: 2018-04-28T04:07:46+09:00
+last_modified_at: 2018-04-28T04:07:46+09:00
 categories: [데이터베이스]
 tags: [postgresql, hook]
 --- 

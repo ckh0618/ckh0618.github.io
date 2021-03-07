@@ -1,8 +1,8 @@
 ---
 published: true
 title: MemoryContext concepts in PostgreSQL 
-date: 2018-05-19T01:42:46+09:00
-last_modified_at: 2019-03-09T03:30:00+09:00
+date: 2018-03-30T09:03:46+09:00
+last_modified_at: 2018-03-30T09:03:46+09:00
 categories: [데이터베이스]
 tags: [postgresql, memory management]
 --- 
