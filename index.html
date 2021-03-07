@@ -228,7 +228,12 @@ if (!doNotTrack) {
     
       <time itemprop="datePublished" datetime="2021-02-28T04:07:46&#43;09:00">
         
-   28, 2021
+  
+  
+  
+  
+    28 Feb 2021 04:07 &#43;0900
+  
 
       </time>
     
@@ -285,7 +290,12 @@ Life of Packet   정리 network 기술 소개 - 모든 POD 은 k8s 안에서 통
     
       <time itemprop="datePublished" datetime="2021-02-19T10:42:46&#43;09:00">
         
-   19, 2021
+  
+  
+  
+  
+    19 Feb 2021 10:42 &#43;0900
+  
 
       </time>
     
@@ -333,16 +343,21 @@ Life of Packet   정리 network 기술 소개 - 모든 POD 은 k8s 안에서 통
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/">
-          MemoryContext concepts in PostgreSQL
+        <a class="link-unstyled" href="https://mo0om.com/2018/postgresql-hooks/">
+          PostgreSQL Hooks
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-05-19T01:42:46&#43;09:00">
+      <time itemprop="datePublished" datetime="2018-04-28T04:07:46&#43;09:00">
         
-   19, 2018
+  
+  
+  
+  
+    28 Apr 2018 04:07 &#43;0900
+  
 
       </time>
     
@@ -360,10 +375,12 @@ Life of Packet   정리 network 기술 소개 - 모든 POD 은 k8s 안에서 통
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        배경 메모리 관리는 여러운 작업중에 하나입니다. 메모리를 할당하고 사용하는 것은 좋은데 할당받은 메모리 포인터를 적시에 반환하지 않거나 놓쳐버리는 경우 흔히 말하는 메모리 릭이 발생하게 됩니다. 이러한 문제는 간단한 커멘드라인 유틸리티등과 같이 짧은 시간 동작하고 종료되는 경우는 그리 큰 문제가 되지 않습니다. OS 가 알아서 프로세스가 종료될때 할당받은 자원을 정리하여 주거든요. 그러나 데이터베이스 서버와 같이 오랜시간 데몬 형태로 동작하여야하는 경우는 메모리를 다 잡아먹고 시스템을 서비스 불능 상태로 만들어버리는 등의 심각한 문제를 일으킬수 있습니다.
+        들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
+Hook Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록 여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.
+이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.
       
       <p>
-        <a href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/" class="postShorten-excerpt_link link"></a>
+        <a href="https://mo0om.com/2018/postgresql-hooks/" class="postShorten-excerpt_link link"></a>
         
       </p>
     </div>
@@ -389,16 +406,21 @@ Life of Packet   정리 network 기술 소개 - 모든 POD 은 k8s 안에서 통
     
     <div class="postShorten-header">
       <h1 class="postShorten-title" itemprop="headline">
-        <a class="link-unstyled" href="https://mo0om.com/2018/postgresql-hooks/">
-          PostgreSQL Hooks
+        <a class="link-unstyled" href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/">
+          MemoryContext concepts in PostgreSQL
         </a>
       </h1>
       
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-02-19T11:43:46&#43;09:00">
+      <time itemprop="datePublished" datetime="2018-03-30T09:03:46&#43;09:00">
         
-   19, 2018
+  
+  
+  
+  
+    30 Mar 2018 09:03 &#43;0900
+  
 
       </time>
     
@@ -416,12 +438,10 @@ Life of Packet   정리 network 기술 소개 - 모든 POD 은 k8s 안에서 통
     </div>
     <div class="postShorten-excerpt" itemprop="articleBody">
       
-        들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
-Hook Hook 은 일종의 Function Pointer 로써, 각각의 모듈별로 정의되어 있습니다. PostgreSQL 개발자들은 기능을 확장할 수 있도록 여러가지 Hook 등을 정의해놓았고, 여기에 내가 만든 코드를 넣어 손쉽게 PostgreSQL 의 동작을 변경하거나, 내가 필요한 코드를 추가로 넣어 기능을 확장 시킬 수 있습니다.
-이러한 Hook 들은 PostgreSQL 의 _hook 접미사를 가진 전역변수로 정의되어있는데, 사실 제대로 Document 되어있지는 않습니다.
+        배경 메모리 관리는 여러운 작업중에 하나입니다. 메모리를 할당하고 사용하는 것은 좋은데 할당받은 메모리 포인터를 적시에 반환하지 않거나 놓쳐버리는 경우 흔히 말하는 메모리 릭이 발생하게 됩니다. 이러한 문제는 간단한 커멘드라인 유틸리티등과 같이 짧은 시간 동작하고 종료되는 경우는 그리 큰 문제가 되지 않습니다. OS 가 알아서 프로세스가 종료될때 할당받은 자원을 정리하여 주거든요. 그러나 데이터베이스 서버와 같이 오랜시간 데몬 형태로 동작하여야하는 경우는 메모리를 다 잡아먹고 시스템을 서비스 불능 상태로 만들어버리는 등의 심각한 문제를 일으킬수 있습니다.
       
       <p>
-        <a href="https://mo0om.com/2018/postgresql-hooks/" class="postShorten-excerpt_link link"></a>
+        <a href="https://mo0om.com/2018/memorycontext-concepts-in-postgresql/" class="postShorten-excerpt_link link"></a>
         
       </p>
     </div>

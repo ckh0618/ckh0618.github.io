@@ -6,11 +6,11 @@
     <description>Recent content in hook on mo0oom - Han&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 19 Feb 2018 11:43:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/tags/hook/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 28 Apr 2018 04:07:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/tags/hook/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>PostgreSQL Hooks</title>
       <link>https://mo0om.com/2018/postgresql-hooks/</link>
-      <pubDate>Mon, 19 Feb 2018 11:43:46 +0900</pubDate>
+      <pubDate>Sat, 28 Apr 2018 04:07:46 +0900</pubDate>
       
       <guid>https://mo0om.com/2018/postgresql-hooks/</guid>
       <description>들어가며 PostgreSQL 은 Hook 이라는 아주 멋진 기능을 제공합니다. 본 글은 PostgreSQL 에서 제공하는 Hook 의 기본 개념과 동작방식에 대해서 소개합니다.
