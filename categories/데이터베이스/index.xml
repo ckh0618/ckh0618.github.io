@@ -6,7 +6,17 @@
     <description>Recent content in 데이터베이스 on mo0oom - Han&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 28 Apr 2018 04:07:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/categories/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Mar 2021 02:16:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/categories/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>InnoDB study for an old school engineer - 1</title>
+      <link>https://mo0om.com/2021/innodb-study-for-an-old-school-engineer-1/</link>
+      <pubDate>Mon, 15 Mar 2021 02:16:46 +0900</pubDate>
+      
+      <guid>https://mo0om.com/2021/innodb-study-for-an-old-school-engineer-1/</guid>
+      <description>들어가며 2000 년대 초반 시장을 쌈싸먹었던 Oracle 의 위상이 현재는 mysql 쪽으로 넘어온거 같습니다. 제가 처음으로 경험한 mysql 은 트렌젝션 특성도 지원하지 않던 3.x 버젼이었는데, 어느덧 시장을 다 재패하고 그 시절 Oracle 보다 더 큰 영향력을 발휘하고 있습니다. mysql 은 곁눈질로만 보고, 제대로 공부한 적이 없었는데 점점 나이는 먹어가고 위기감도 들어 공부를 시작해봅니다. innodb 를 중심으로 살펴볼 생각입니다.
+InnoDB Physical Layout 메뉴얼을 보니 이 그림이 아주 멋져서 들고 왔습니다. 이 그림을 보고 흥미로운 점을 몇가지 찾아서 적어봅니다.</description>
+    </item>
+    
     <item>
       <title>PostgreSQL Hooks</title>
       <link>https://mo0om.com/2018/postgresql-hooks/</link>

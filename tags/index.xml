@@ -6,7 +6,25 @@
     <description>Recent content in Tags on mo0oom - Han&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 28 Feb 2021 04:07:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Mar 2021 02:16:46 +0900</lastBuildDate><atom:link href="https://mo0om.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>innodb</title>
+      <link>https://mo0om.com/tags/innodb/</link>
+      <pubDate>Mon, 15 Mar 2021 02:16:46 +0900</pubDate>
+      
+      <guid>https://mo0om.com/tags/innodb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mysql</title>
+      <link>https://mo0om.com/tags/mysql/</link>
+      <pubDate>Mon, 15 Mar 2021 02:16:46 +0900</pubDate>
+      
+      <guid>https://mo0om.com/tags/mysql/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>k8s</title>
       <link>https://mo0om.com/tags/k8s/</link>
